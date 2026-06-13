@@ -51,11 +51,16 @@ def is_large(text: str) -> bool:
     return len(text) > DOC_THRESHOLD_CHARS
 
 
-def analyze_document(text: str, deep_k: int = 1, deep_fn=None) -> dict:
+def analyze_document(text: str, deep_threshold: int = 34, max_deep: int = 8,
+                     deep_fn=None) -> dict:
     """
-    Analysiert ein grosses Dokument. deep_fn = LLM-Analysefunktion (default: lazy
-    Import von analyzer.analyze_text mit nur 1 Versuch -> begrenzt Latenz bei
-    flakem lokalem Modell). deep_k = Anzahl tief analysierter Hotspots.
+    Analysiert ein grosses Dokument.
+    deep_fn = LLM-Analysefunktion (default: analyzer.analyze_text, 1 Versuch).
+    deep_threshold = ab welchem Baseline-Score ein Segment vom LLM verifiziert wird.
+    max_deep = Obergrenze der LLM-Calls (Latenzschutz).
+
+    WICHTIG: Der Gesamtscore kommt NUR von LLM-verifizierten Segmenten. Rohe
+    Baseline-Keyword-Treffer (ohne Kontext) duerfen keinen HIGH-Alarm ausloesen.
     """
     if deep_fn is None:
         from analyzer import analyze_text as _at
@@ -72,11 +77,9 @@ def analyze_document(text: str, deep_k: int = 1, deep_fn=None) -> dict:
     # --- Stufe 1: Baseline ueber ALLE Segmente (instant) ---
     segs = []
     total_hits = 0
-    patterns = set()
     for i, seg_text in enumerate(raw_segments):
         b = _baseline(seg_text)
         total_hits += len(b["highlights"])
-        patterns |= set(b["detected_patterns"])
         segs.append({"idx": i, "text": seg_text, "baseline": b,
                      "score": b["score"], "deep": None})
 
@@ -84,9 +87,15 @@ def analyze_document(text: str, deep_k: int = 1, deep_fn=None) -> dict:
     frac_elevated = len(elevated) / n
     hits_per_1000 = (total_hits / words * 1000) if words else 0.0
 
-    # --- Stufe 2: LLM nur auf die auffaelligsten Segmente ---
+    # --- Stufe 2: LLM verifiziert ALLE Kandidaten-Segmente (Baseline >= Schwelle) ---
+    # Patterns sammeln wir NUR aus verifizierten Segmenten -> keine unkontextua-
+    # lisierten Baseline-Falschmeldungen im Ergebnis.
+    patterns = set()
     ranked = sorted(segs, key=lambda s: -s["baseline"]["score"])
-    hotspots = [s for s in ranked if s["baseline"]["score"] > 0][:deep_k]
+    candidates = [s for s in ranked if s["baseline"]["score"] >= deep_threshold]
+    if not candidates and ranked and ranked[0]["baseline"]["score"] > 0:
+        candidates = ranked[:1]  # zumindest das auffaelligste Segment verifizieren
+    hotspots = candidates[:max_deep]
     for s in hotspots:
         d = deep_fn(s["text"])
         if d.get("risk_level") != "error":
