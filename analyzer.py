@@ -138,7 +138,10 @@ def analyze_text(text: str) -> dict:
             return _validate(_extract_json(raw), text)
         except Exception as e:
             last_err = e
-            time.sleep(1.5 * (attempt + 1))  # linearer Backoff
+            # Endpoint nicht erreichbar -> nicht 3x warten, sofort Fallback (Demo-Tempo).
+            if "Connection" in type(e).__name__ or "connect" in str(e).lower():
+                break
+            time.sleep(1.5 * (attempt + 1))  # linearer Backoff bei transienten Fehlern
 
     return _fallback(text, f"LLM nicht erreichbar nach {MAX_RETRIES} Versuchen ({last_err})")
 
