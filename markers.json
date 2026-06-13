@@ -1,10 +1,11 @@
 {
   "_meta": {
     "purpose": "Evidenzbasiertes Marker-Modell fuer den Depression/Suizidalitaet-Analysator.",
-    "derivation": "Theoriegetriebene Saat-Lexika (Al-Mosaiwi & Johnson-Laird 2018; Pennebaker) + datengetriebene Entdeckung via gewichteter Log-Odds auf reddit_depression_suicidewatch.csv (20.363 Posts).",
+    "derivation": "Theoriegetriebene Saat-Lexika (Al-Mosaiwi & Johnson-Laird 2018; Pennebaker) + datengetriebene Entdeckung via gewichteter Log-Odds auf reddit_depression_suicidewatch.csv (20.363 Posts). Lexika ZWEISPRACHIG (EN+DE), da Zielmarkt deutschsprachig.",
     "caveat": "Datensatz hat keine GESUNDE Kontrollgruppe -> absolutism & self_focus sind in beiden Klassen gleich hoch und auf diesen Daten NICHT als Krisenmarker validiert. Score-Achse misst Akuitaet (chronisch -> akut), nicht krank-vs-gesund.",
     "disclaimer": "Dies sind SPRACHLICHE MARKER, keine klinischen Diagnosen. Sie unterstuetzen geschultes Fachpersonal bei der Einschaetzung, ersetzen aber keine Untersuchung.",
-    "scoring_logic": "Roh-Score = Summe(Gewicht * Treffer), normalisiert auf 0-100. Imminence/method dominieren bewusst. risk_level: 0-33 low, 34-66 medium, 67-100 high. Schon EIN imminence- oder method-Treffer hebt mindestens auf high."
+    "scoring_logic": "Roh-Score = Summe(Gewicht * Treffer), normalisiert auf 0-100. Imminence/method dominieren bewusst. risk_level: 0-33 low, 34-66 medium, 67-100 high. Schon EIN imminence- oder method-Treffer hebt mindestens auf high.",
+    "lexicon_note": "Lexika dienen als (a) Anker im LLM-Prompt und (b) Keyword-Filter im Baseline. absolutism bleibt bewusst EN-lastig, da deutsche Absolut-Woerter (nie/immer/alles) zu haeufig sind und den Filter fluten wuerden; das LLM erkennt deutschen Absolutismus dennoch ueber die Beschreibung."
   },
   "categories": [
     {
@@ -16,7 +17,7 @@
       "what": "Sprachliche Hinweise auf einen konkreten Suizidplan, ein Zeitfenster ('heute Nacht') oder Abschiedssignale.",
       "why": "Das Vorliegen eines konkreten Plans, Zeitrahmens oder von Vorbereitungshandlungen gilt in Suizid-Risikoprotokollen als staerkster Indikator fuer eine akute, kurzfristige Gefaehrdung - deutlich aussagekraeftiger als Suizidgedanken allein.",
       "source": "Columbia Suicide Severity Rating Scale (Posner et al., 2011)",
-      "lexicon": ["tonight", "goodbye", "this is it", "suicide note", "suicide plan", "attempt", "attempted", "commit suicide", "going to do it", "made up my mind", "end it tonight"]
+      "lexicon": ["tonight", "goodbye", "this is it", "suicide note", "suicide plan", "attempt", "attempted", "commit suicide", "going to do it", "made up my mind", "end it tonight", "abschiedsbrief", "mach schluss", "letzter brief", "ein letztes mal", "es ist so weit"]
     },
     {
       "type": "method_means",
@@ -27,7 +28,7 @@
       "what": "Nennung konkreter Mittel oder Methoden eines Suizids.",
       "why": "Spezifitaet und Verfuegbarkeit der Mittel erhoehen das Risiko erheblich; eine konkrete Methodennennung deutet auf fortgeschrittene Planung. Die Einschraenkung von Mitteln (means restriction) ist eine der wirksamsten Praeventionsmassnahmen.",
       "source": "Means-Restriction-Forschung (Mann et al., 2005)",
-      "lexicon": ["gun", "pills", "overdose", "rope", "jump", "bridge", "painless", "knife", "blade"]
+      "lexicon": ["gun", "pills", "overdose", "rope", "jump", "bridge", "painless", "knife", "blade", "tabletten", "ueberdosis", "überdosis", "bruecke", "brücke", "strick", "pulsadern", "springen"]
     },
     {
       "type": "suicidal_ideation",
@@ -38,7 +39,7 @@
       "what": "Direkter sprachlicher Ausdruck des Wunsches zu sterben oder nicht mehr da zu sein.",
       "why": "Unterschieden wird zwischen passivem Todeswunsch ('waere besser, nicht mehr da zu sein') und aktiver Suizidabsicht. In den analysierten Daten der mit Abstand trennschaerfste Marker - 2,7x haeufiger in akuten Krisentexten als in Depressionstexten.",
       "source": "Datenbefund (Log-Odds) + klinische Standarddiagnostik",
-      "lexicon": ["suicide", "suicidal", "kill myself", "killing myself", "want to die", "end it", "end my life", "no reason to live", "better off dead", "not be here", "wish i was dead", "disappear", "dont want to be alive", "cant go on"]
+      "lexicon": ["suicide", "suicidal", "kill myself", "killing myself", "want to die", "end it", "end my life", "no reason to live", "better off dead", "not be here", "wish i was dead", "disappear", "dont want to be alive", "cant go on", "nicht mehr leben", "nicht mehr da sein", "will nicht mehr", "nicht mehr weiterleben", "umbringen", "selbstmord", "suizid", "besser ohne mich", "lieber tot", "nicht mehr aufwachen"]
     },
     {
       "type": "hopelessness",
@@ -49,7 +50,7 @@
       "what": "Globale, zeitlich unbegrenzte Aussichtslosigkeit - die Ueberzeugung, dass sich nie etwas bessern wird.",
       "why": "Hoffnungslosigkeit ist nach Becks Forschung ein staerkerer Praediktor fuer spaeteren Suizid als der Schweregrad der Depression selbst. Sie verbindet aktuelle Verzweiflung mit der Erwartung, nichts daran aendern zu koennen.",
       "source": "Becks Hoffnungslosigkeits-Theorie (Beck et al., 1985)",
-      "lexicon": ["hopeless", "pointless", "no point", "no future", "give up", "giving up", "nothing matters", "never get better", "no way out", "trapped", "stuck", "no hope", "meaningless", "whats the point"]
+      "lexicon": ["hopeless", "pointless", "no point", "no future", "give up", "giving up", "nothing matters", "never get better", "no way out", "trapped", "stuck", "no hope", "meaningless", "whats the point", "keinen sinn", "kein sinn", "sinnlos", "hoffnungslos", "ausweglos", "nie besser", "keine perspektive", "wozu das alles", "bringt nichts", "keine hoffnung", "aendert sich eh", "ändert sich eh", "tiefes loch", "kein ausweg", "nicht mehr weiter", "alles zu viel", "weiss nicht mehr weiter", "weiß nicht mehr weiter", "keinen sinn mehr"]
     },
     {
       "type": "worthlessness",
@@ -60,7 +61,7 @@
       "what": "Selbstabwertung und das Gefuehl, fuer andere eine Last zu sein.",
       "why": "Die wahrgenommene Last fuer andere ('perceived burdensomeness') ist eine der beiden Kernkomponenten in Joiners Interpersonaler Theorie des Suizids. Der Gedanke 'allen ginge es ohne mich besser' ist ein spezifisches Warnsignal.",
       "source": "Interpersonale Theorie des Suizids (Joiner, 2005)",
-      "lexicon": ["worthless", "useless", "failure", "burden", "hate myself", "pathetic", "disgusting", "ashamed", "not good enough", "unlovable", "broken"]
+      "lexicon": ["worthless", "useless", "failure", "burden", "hate myself", "pathetic", "disgusting", "ashamed", "not good enough", "unlovable", "broken", "wertlos", "nutzlos", "versager", "zur last", "last fallen", "belaste", "schlechte freundin", "schlechter freund", "nichts wert", "nichts gebacken", "nichts auf die reihe", "hasse mich", "schaeme mich", "schäme mich", "nichts hin"]
     },
     {
       "type": "absolutism",
@@ -82,18 +83,18 @@
       "what": "Sprachliche Zeichen von Isolation und Verlust sozialer Verbundenheit.",
       "why": "Mangelnde Zugehoerigkeit ('thwarted belongingness') ist die zweite Kernkomponente in Joiners Theorie des Suizids; soziale Isolation ist ein etablierter Risikofaktor.",
       "source": "Interpersonale Theorie des Suizids (Joiner, 2005)",
-      "lexicon": ["alone", "lonely", "nobody cares", "isolated", "no friends", "by myself", "no one understands", "withdraw"]
+      "lexicon": ["alone", "lonely", "nobody cares", "isolated", "no friends", "by myself", "no one understands", "withdraw", "allein", "alleine", "lieber allein", "verkrochen", "verkriechen", "keine lust auf menschen", "keine lust rauszugehen", "isoliert", "zurueckgezogen", "zurückgezogen", "keiner versteht", "meine ruhe", "keine lust auf leute", "keine lust auf partys"]
     },
     {
       "type": "self_focus",
       "label_de": "Erhoehte Ich-Bezogenheit",
       "weight": 1,
       "color": "#fff176",
-      "description": "Hohe Dichte an I/me/my. ALS DICHTE-METRIK behandeln, NICHT jedes Vorkommen markieren. Auf diesen Daten nicht gegen Kontrolle validiert.",
+      "description": "Hohe Dichte an I/me/my bzw. ich/mich/mein. ALS DICHTE-METRIK behandeln, NICHT jedes Vorkommen markieren. Auf diesen Daten nicht gegen Kontrolle validiert.",
       "what": "Auffaellig hohe Dichte an Ich-bezogenen Woertern (ich, mich, mein).",
       "why": "Erhoehter Gebrauch der ersten Person Singular korreliert mit Depression und negativem Affekt und gilt als sprachlicher Marker fuer selbstfokussierte Aufmerksamkeit/Rumination. Wird als Dichte gemessen, nicht einzeln markiert. Ebenfalls nicht gegen eine gesunde Kontrolle validiert.",
       "source": "Pennebaker et al.; Rude et al. (2004)",
-      "lexicon": ["i", "me", "my", "mine", "myself"],
+      "lexicon": ["i", "me", "my", "mine", "myself", "ich", "mich", "mein", "mir", "meine", "meiner"],
       "treat_as_density": true
     }
   ]
