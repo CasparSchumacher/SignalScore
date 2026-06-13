@@ -16,7 +16,7 @@
       "what": "Sprachliche Hinweise auf einen konkreten Suizidplan, ein Zeitfenster ('heute Nacht') oder Abschiedssignale.",
       "why": "Das Vorliegen eines konkreten Plans, Zeitrahmens oder von Vorbereitungshandlungen gilt in Suizid-Risikoprotokollen als staerkster Indikator fuer eine akute, kurzfristige Gefaehrdung - deutlich aussagekraeftiger als Suizidgedanken allein.",
       "source": "Columbia Suicide Severity Rating Scale (Posner et al., 2011)",
-      "lexicon": ["tonight", "today", "goodbye", "this is it", "last", "plan", "note", "letter", "attempt", "attempted", "tried", "commit", "going to do it", "decided", "made up my mind", "final"]
+      "lexicon": ["tonight", "goodbye", "this is it", "suicide note", "suicide plan", "attempt", "attempted", "commit suicide", "going to do it", "made up my mind", "end it tonight"]
     },
     {
       "type": "method_means",

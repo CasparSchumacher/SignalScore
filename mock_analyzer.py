@@ -74,9 +74,15 @@ def analyze_text(text: str) -> dict:
 
         cat_hit = False
         for term in cat["lexicon"]:
+            term_hits = 0
             for start, end, exact in _find_spans(text, term):
                 if (start, end) in seen_spans:
                     continue
+                # Wiederholungs-Deckel: dasselbe Wort zaehlt max. 3x (verhindert,
+                # dass banale Wiederholung in langen Texten den Score inflationiert).
+                if term_hits >= 3:
+                    break
+                term_hits += 1
                 seen_spans.add((start, end))
                 raw += weight
                 cat_hit = True

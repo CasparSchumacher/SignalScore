@@ -12,6 +12,7 @@ import os
 import streamlit as st
 
 from analyzer import analyze_text
+from document import analyze_document, is_large
 from prompts import load_markers
 
 st.set_page_config(page_title="SignalScore", page_icon="🩺", layout="wide")
@@ -65,6 +66,57 @@ def ampel_color(score: int) -> str:
     if score >= 34:
         return "#f9a825"
     return "#2e7d32"
+
+
+def render_document(res: dict):
+    """Dokument-Ansicht fuer grosse Texte: Dichte-Metriken, Risiko-Timeline, Hotspots."""
+    doc = res["document"]
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Wörter", f"{doc['words']:,}".replace(",", "."))
+    c2.metric("Segmente", doc["n_segments"])
+    c3.metric("Treffer / 1.000 W.", doc["hits_per_1000"])
+    c4.metric("Auffällige Segmente", f"{round(doc['fraction_elevated'] * 100)} %")
+    st.caption("**Score = Spitzenrisiko** (kritischstes Segment, nicht verwässert). "
+               "**Dichte** zeigt, wie durchgängig die Belastung ist.")
+
+    st.markdown("**Risiko-Verlauf über das Dokument**")
+    st.caption("Jeder Balken = ein Segment · Höhe/Farbe = Risiko · ▲ = LLM-tiefenanalysiert")
+    tl = doc["timeline"]
+    step = max(1, len(tl) // 150)  # bei sehr vielen Segmenten ausduennen
+    shown = tl[::step]
+    bars = []
+    for seg in shown:
+        s = seg["score"]
+        h = max(3, int(s * 0.55))
+        mark = "▲" if seg["is_hotspot"] else "&nbsp;"
+        bars.append(
+            f'<div title="Segment {seg["idx"] + 1}: Score {s}" '
+            f'style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:2px;">'
+            f'<div style="font-size:.55rem;color:#aaa;line-height:1;">{mark}</div>'
+            f'<div style="width:100%;height:{h}px;background:{ampel_color(s)};border-radius:2px 2px 0 0;"></div></div>'
+        )
+    note = f" (von {len(tl)} Segmenten ausgedünnt dargestellt)" if step > 1 else ""
+    st.markdown(
+        f'<div style="display:flex;gap:1px;align-items:flex-end;height:75px;border-bottom:1px solid #555;">{"".join(bars)}</div>'
+        f'<div style="font-size:.7rem;color:#888;text-align:right;">{note}</div>',
+        unsafe_allow_html=True,
+    )
+
+    st.subheader("🔎 Kritische Stellen")
+    for hs in doc["hotspots"]:
+        tag = "LLM-Tiefenanalyse" if hs["deep"] else "Keyword-Baseline"
+        with st.expander(
+            f"Segment {hs['idx'] + 1} · Score {hs['score']} · {hs['risk_level'].upper()} · {tag}",
+            expanded=(hs["risk_level"] == "high"),
+        ):
+            st.write(hs["summary"])
+            st.markdown(
+                f'<div style="line-height:1.8;font-size:1.02rem;">{render_highlighted(hs["text"], hs["highlights"])}</div>',
+                unsafe_allow_html=True,
+            )
+            used = {h["type"] for h in hs["highlights"]}
+            if used:
+                st.markdown("**Muster:** " + " ".join(chip(t) for t in used), unsafe_allow_html=True)
 
 
 def render_highlighted(text: str, highlights: list) -> str:
@@ -137,6 +189,11 @@ with st.sidebar:
         if st.button(d["label"], use_container_width=True, key=d["label"]):
             st.session_state.input_text = d["text"]
 
+    if os.path.exists("sample_document.txt"):
+        if st.button("📄 Großes Dokument (Journal)", use_container_width=True, key="__doc__"):
+            with open("sample_document.txt", encoding="utf-8") as f:
+                st.session_state.input_text = f.read()
+
     st.divider()
     with st.expander("📖 Marker-Glossar (alle Warnsignale)"):
         all_types = [c["type"] for c in sorted(_CATS.values(), key=lambda c: -c["weight"])]
@@ -146,16 +203,32 @@ left, right = st.columns([1, 1])
 
 with left:
     st.subheader("Eingabe")
-    text = st.text_area("Zu analysierender Text", value=st.session_state.input_text,
-                        height=320, label_visibility="collapsed",
-                        placeholder="Text hier einfügen oder ein Demo-Beispiel wählen …")
+    uploaded = st.file_uploader(
+        "Datei hochladen (Chat-Export, Journal, WhatsApp, .txt/.md/.csv/.log)",
+        type=["txt", "md", "csv", "json", "log"])
+    file_text = None
+    if uploaded is not None:
+        file_text = uploaded.read().decode("utf-8", errors="replace")
+        st.info(f"📄 **{uploaded.name}** — {len(file_text):,} Zeichen, "
+                f"{len(file_text.split()):,} Wörter".replace(",", "."))
+    text_input = st.text_area(
+        "Zu analysierender Text", value=st.session_state.input_text, height=240,
+        label_visibility="collapsed",
+        placeholder="Text einfügen, Demo wählen — oder oben eine Datei hochladen …")
     analyze = st.button("🔍 Analysieren", type="primary", use_container_width=True)
 
-# Genau EIN Analyse-Aufruf pro Klick.
+# Hochgeladene Datei hat Vorrang vor dem Textfeld.
+text = file_text if (file_text and file_text.strip()) else text_input
+
+# Genau EIN Analyse-Aufruf pro Klick. Grosse Texte -> Dokument-Modus (Zwei-Stufen-Scan).
 res = None
 if analyze and text.strip():
-    with st.spinner("Analysiere …"):
-        res = analyze_text(text)
+    if is_large(text):
+        with st.spinner("Dokument-Scan (Stufe 1: ganzes Dokument · Stufe 2: Hotspots) …"):
+            res = analyze_document(text)
+    else:
+        with st.spinner("Analysiere …"):
+            res = analyze_text(text)
 
 with right:
     st.subheader("Ergebnis")
@@ -185,16 +258,17 @@ with right:
     else:
         st.info("Text eingeben und **Analysieren** klicken.")
 
-# --- Markierter Text in voller Breite ---
-if res is not None:
-    if res.get("risk_level") != "error":
-        st.divider()
+# --- Vollbreite-Sektion: Dokument-Ansicht ODER markierter Einzeltext ---
+if res is not None and res.get("risk_level") != "error":
+    st.divider()
+    if res.get("mode") == "document":
+        render_document(res)
+    else:
         st.subheader("Begründung im Text")
         st.markdown(
             f'<div style="line-height:1.9;font-size:1.05rem;">{render_highlighted(text, res["highlights"])}</div>',
             unsafe_allow_html=True,
         )
-        # Legende
         used = {h["type"] for h in res["highlights"]}
         if used:
             leg = " ".join(
