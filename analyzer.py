@@ -126,6 +126,7 @@ def analyze_text(text: str) -> dict:
                     {"role": "user", "content": text},
                 ],
                 temperature=0.2,
+                max_tokens=700,  # begrenzt Latenz; JSON-Antwort ist kompakt
             )
             # JSON-Mode versuchen; manche lokale Server kennen das Feld nicht.
             try:

@@ -3,6 +3,7 @@
     "purpose": "Evidenzbasiertes Marker-Modell fuer den Depression/Suizidalitaet-Analysator.",
     "derivation": "Theoriegetriebene Saat-Lexika (Al-Mosaiwi & Johnson-Laird 2018; Pennebaker) + datengetriebene Entdeckung via gewichteter Log-Odds auf reddit_depression_suicidewatch.csv (20.363 Posts).",
     "caveat": "Datensatz hat keine GESUNDE Kontrollgruppe -> absolutism & self_focus sind in beiden Klassen gleich hoch und auf diesen Daten NICHT als Krisenmarker validiert. Score-Achse misst Akuitaet (chronisch -> akut), nicht krank-vs-gesund.",
+    "disclaimer": "Dies sind SPRACHLICHE MARKER, keine klinischen Diagnosen. Sie unterstuetzen geschultes Fachpersonal bei der Einschaetzung, ersetzen aber keine Untersuchung.",
     "scoring_logic": "Roh-Score = Summe(Gewicht * Treffer), normalisiert auf 0-100. Imminence/method dominieren bewusst. risk_level: 0-33 low, 34-66 medium, 67-100 high. Schon EIN imminence- oder method-Treffer hebt mindestens auf high."
   },
   "categories": [
@@ -12,6 +13,9 @@
       "weight": 5,
       "color": "#7f0000",
       "description": "Hinweise auf konkreten Plan, Zeitfenster oder Abschied. Staerkster Eskalator.",
+      "what": "Sprachliche Hinweise auf einen konkreten Suizidplan, ein Zeitfenster ('heute Nacht') oder Abschiedssignale.",
+      "why": "Das Vorliegen eines konkreten Plans, Zeitrahmens oder von Vorbereitungshandlungen gilt in Suizid-Risikoprotokollen als staerkster Indikator fuer eine akute, kurzfristige Gefaehrdung - deutlich aussagekraeftiger als Suizidgedanken allein.",
+      "source": "Columbia Suicide Severity Rating Scale (Posner et al., 2011)",
       "lexicon": ["tonight", "today", "goodbye", "this is it", "last", "plan", "note", "letter", "attempt", "attempted", "tried", "commit", "going to do it", "decided", "made up my mind", "final"]
     },
     {
@@ -20,6 +24,9 @@
       "weight": 4,
       "color": "#b71c1c",
       "description": "Bezug auf konkrete Mittel oder Methoden. Klinisch hoch relevant fuer Risikoabschaetzung.",
+      "what": "Nennung konkreter Mittel oder Methoden eines Suizids.",
+      "why": "Spezifitaet und Verfuegbarkeit der Mittel erhoehen das Risiko erheblich; eine konkrete Methodennennung deutet auf fortgeschrittene Planung. Die Einschraenkung von Mitteln (means restriction) ist eine der wirksamsten Praeventionsmassnahmen.",
+      "source": "Means-Restriction-Forschung (Mann et al., 2005)",
       "lexicon": ["gun", "pills", "overdose", "rope", "jump", "bridge", "painless", "knife", "blade"]
     },
     {
@@ -28,6 +35,9 @@
       "weight": 4,
       "color": "#d84315",
       "description": "Direkter Wunsch zu sterben oder nicht mehr da zu sein.",
+      "what": "Direkter sprachlicher Ausdruck des Wunsches zu sterben oder nicht mehr da zu sein.",
+      "why": "Unterschieden wird zwischen passivem Todeswunsch ('waere besser, nicht mehr da zu sein') und aktiver Suizidabsicht. In den analysierten Daten der mit Abstand trennschaerfste Marker - 2,7x haeufiger in akuten Krisentexten als in Depressionstexten.",
+      "source": "Datenbefund (Log-Odds) + klinische Standarddiagnostik",
       "lexicon": ["suicide", "suicidal", "kill myself", "killing myself", "want to die", "end it", "end my life", "no reason to live", "better off dead", "not be here", "wish i was dead", "disappear", "dont want to be alive", "cant go on"]
     },
     {
@@ -36,6 +46,9 @@
       "weight": 3,
       "color": "#ef6c00",
       "description": "Globale, zeitlich unbegrenzte Aussichtslosigkeit.",
+      "what": "Globale, zeitlich unbegrenzte Aussichtslosigkeit - die Ueberzeugung, dass sich nie etwas bessern wird.",
+      "why": "Hoffnungslosigkeit ist nach Becks Forschung ein staerkerer Praediktor fuer spaeteren Suizid als der Schweregrad der Depression selbst. Sie verbindet aktuelle Verzweiflung mit der Erwartung, nichts daran aendern zu koennen.",
+      "source": "Becks Hoffnungslosigkeits-Theorie (Beck et al., 1985)",
       "lexicon": ["hopeless", "pointless", "no point", "no future", "give up", "giving up", "nothing matters", "never get better", "no way out", "trapped", "stuck", "no hope", "meaningless", "whats the point"]
     },
     {
@@ -44,6 +57,9 @@
       "weight": 2,
       "color": "#f9a825",
       "description": "Selbstabwertung, Gefuehl eine Last zu sein.",
+      "what": "Selbstabwertung und das Gefuehl, fuer andere eine Last zu sein.",
+      "why": "Die wahrgenommene Last fuer andere ('perceived burdensomeness') ist eine der beiden Kernkomponenten in Joiners Interpersonaler Theorie des Suizids. Der Gedanke 'allen ginge es ohne mich besser' ist ein spezifisches Warnsignal.",
+      "source": "Interpersonale Theorie des Suizids (Joiner, 2005)",
       "lexicon": ["worthless", "useless", "failure", "burden", "hate myself", "pathetic", "disgusting", "ashamed", "not good enough", "unlovable", "broken"]
     },
     {
@@ -52,6 +68,9 @@
       "weight": 2,
       "color": "#fbc02d",
       "description": "Schwarz-Weiss-Denken. ACHTUNG: auf diesen Daten nicht gegen Kontrolle validiert.",
+      "what": "Schwarz-Weiss-Denken in Absolutbegriffen ('immer', 'nie', 'nichts', 'alle').",
+      "why": "Absolutistische Woerter treten in Depressions-, Angst- und Suizidforen nachweislich erhoeht auf und spiegeln kognitive Rigiditaet wider. Wichtig: Dieser Marker trennt belastete von gesunden Personen - nicht Depression von Suizidalitaet. Auf unseren zwei Klassen daher nicht validiert.",
+      "source": "Al-Mosaiwi & Johnson-Laird (2018)",
       "lexicon": ["always", "never", "nothing", "everything", "everyone", "nobody", "no one", "completely", "totally", "absolutely", "constantly", "forever", "ever", "every"]
     },
     {
@@ -60,6 +79,9 @@
       "weight": 2,
       "color": "#fdd835",
       "description": "Isolation, Verlust von Verbindung.",
+      "what": "Sprachliche Zeichen von Isolation und Verlust sozialer Verbundenheit.",
+      "why": "Mangelnde Zugehoerigkeit ('thwarted belongingness') ist die zweite Kernkomponente in Joiners Theorie des Suizids; soziale Isolation ist ein etablierter Risikofaktor.",
+      "source": "Interpersonale Theorie des Suizids (Joiner, 2005)",
       "lexicon": ["alone", "lonely", "nobody cares", "isolated", "no friends", "by myself", "no one understands", "withdraw"]
     },
     {
@@ -68,6 +90,9 @@
       "weight": 1,
       "color": "#fff176",
       "description": "Hohe Dichte an I/me/my. ALS DICHTE-METRIK behandeln, NICHT jedes Vorkommen markieren. Auf diesen Daten nicht gegen Kontrolle validiert.",
+      "what": "Auffaellig hohe Dichte an Ich-bezogenen Woertern (ich, mich, mein).",
+      "why": "Erhoehter Gebrauch der ersten Person Singular korreliert mit Depression und negativem Affekt und gilt als sprachlicher Marker fuer selbstfokussierte Aufmerksamkeit/Rumination. Wird als Dichte gemessen, nicht einzeln markiert. Ebenfalls nicht gegen eine gesunde Kontrolle validiert.",
+      "source": "Pennebaker et al.; Rude et al. (2004)",
       "lexicon": ["i", "me", "my", "mine", "myself"],
       "treat_as_density": true
     }

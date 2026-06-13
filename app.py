@@ -31,6 +31,34 @@ def load_demos():
     ]
 
 
+def chip(ctype: str) -> str:
+    c = _CATS.get(ctype, {})
+    return (f'<span style="background:{c.get("color","#ddd")};color:#111;border-radius:10px;'
+            f'padding:2px 8px;font-size:.8rem;margin:2px;display:inline-block;">'
+            f'{c.get("label_de", ctype)}</span>')
+
+
+def render_glossary(types, heading: str):
+    """Psychologisch fundierte Erklaerung der angegebenen Marker-Kategorien."""
+    st.markdown(f"**{heading}**")
+    st.caption("Dies sind sprachliche Marker, **keine Diagnosen** – sie unterstützen die "
+               "Einschätzung durch Fachpersonal.")
+    for t in types:
+        c = _CATS.get(t)
+        if not c:
+            continue
+        st.markdown(
+            f'<div style="border-left:4px solid {c["color"]};padding:4px 0 4px 12px;margin:8px 0;">'
+            f'<span style="font-weight:600;">{c["label_de"]}</span> '
+            f'<span style="color:#888;font-size:.8rem;">(Gewicht {c["weight"]})</span><br>'
+            f'<span>{c.get("what","")}</span><br>'
+            f'<span style="color:#aaa;font-size:.9rem;"><i>Warum relevant:</i> {c.get("why","")}</span><br>'
+            f'<span style="color:#777;font-size:.78rem;">Quelle: {c.get("source","")}</span>'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
+
+
 def ampel_color(score: int) -> str:
     if score >= 67:
         return "#d32f2f"
@@ -109,6 +137,11 @@ with st.sidebar:
         if st.button(d["label"], use_container_width=True, key=d["label"]):
             st.session_state.input_text = d["text"]
 
+    st.divider()
+    with st.expander("📖 Marker-Glossar (alle Warnsignale)"):
+        all_types = [c["type"] for c in sorted(_CATS.values(), key=lambda c: -c["weight"])]
+        render_glossary(all_types, "Alle linguistischen Marker")
+
 left, right = st.columns([1, 1])
 
 with left:
@@ -143,13 +176,10 @@ with right:
             )
             st.write(res["summary"])
             if res.get("detected_patterns"):
-                chips = " ".join(
-                    f'<span style="background:{_CATS.get(p,{}).get("color","#ddd")};'
-                    f'color:#111;border-radius:10px;padding:2px 8px;font-size:.8rem;margin:2px;'
-                    f'display:inline-block;">{_CATS.get(p,{}).get("label_de",p)}</span>'
-                    for p in res["detected_patterns"]
-                )
+                chips = " ".join(chip(p) for p in res["detected_patterns"])
                 st.markdown("**Erkannte Muster:** " + chips, unsafe_allow_html=True)
+                with st.expander("ℹ️ Was bedeuten diese Muster?"):
+                    render_glossary(res["detected_patterns"], "Erläuterung der erkannten Muster")
     elif analyze:
         st.info("Bitte zuerst Text eingeben.")
     else:
