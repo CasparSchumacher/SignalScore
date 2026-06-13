@@ -1,0 +1,14 @@
+# Secrets
+.env
+
+# Daten nicht committen (sensibel + gross)
+data/*.csv
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# OS
+.DS_Store

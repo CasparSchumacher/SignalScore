@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "purpose": "Evidenzbasiertes Marker-Modell fuer den Depression/Suizidalitaet-Analysator.",
+    "derivation": "Theoriegetriebene Saat-Lexika (Al-Mosaiwi & Johnson-Laird 2018; Pennebaker) + datengetriebene Entdeckung via gewichteter Log-Odds auf reddit_depression_suicidewatch.csv (20.363 Posts).",
+    "caveat": "Datensatz hat keine GESUNDE Kontrollgruppe -> absolutism & self_focus sind in beiden Klassen gleich hoch und auf diesen Daten NICHT als Krisenmarker validiert. Score-Achse misst Akuitaet (chronisch -> akut), nicht krank-vs-gesund.",
+    "scoring_logic": "Roh-Score = Summe(Gewicht * Treffer), normalisiert auf 0-100. Imminence/method dominieren bewusst. risk_level: 0-33 low, 34-66 medium, 67-100 high. Schon EIN imminence- oder method-Treffer hebt mindestens auf high."
+  },
+  "categories": [
+    {
+      "type": "imminence",
+      "label_de": "Akute Imminenz / Plan",
+      "weight": 5,
+      "color": "#7f0000",
+      "description": "Hinweise auf konkreten Plan, Zeitfenster oder Abschied. Staerkster Eskalator.",
+      "lexicon": ["tonight", "today", "goodbye", "this is it", "last", "plan", "note", "letter", "attempt", "attempted", "tried", "commit", "going to do it", "decided", "made up my mind", "final"]
+    },
+    {
+      "type": "method_means",
+      "label_de": "Methode / Mittel",
+      "weight": 4,
+      "color": "#b71c1c",
+      "description": "Bezug auf konkrete Mittel oder Methoden. Klinisch hoch relevant fuer Risikoabschaetzung.",
+      "lexicon": ["gun", "pills", "overdose", "rope", "jump", "bridge", "painless", "knife", "blade"]
+    },
+    {
+      "type": "suicidal_ideation",
+      "label_de": "Suizidgedanken",
+      "weight": 4,
+      "color": "#d84315",
+      "description": "Direkter Wunsch zu sterben oder nicht mehr da zu sein.",
+      "lexicon": ["suicide", "suicidal", "kill myself", "killing myself", "want to die", "end it", "end my life", "no reason to live", "better off dead", "not be here", "wish i was dead", "disappear", "dont want to be alive", "cant go on"]
+    },
+    {
+      "type": "hopelessness",
+      "label_de": "Hoffnungslosigkeit",
+      "weight": 3,
+      "color": "#ef6c00",
+      "description": "Globale, zeitlich unbegrenzte Aussichtslosigkeit.",
+      "lexicon": ["hopeless", "pointless", "no point", "no future", "give up", "giving up", "nothing matters", "never get better", "no way out", "trapped", "stuck", "no hope", "meaningless", "whats the point"]
+    },
+    {
+      "type": "worthlessness",
+      "label_de": "Wertlosigkeit / Last",
+      "weight": 2,
+      "color": "#f9a825",
+      "description": "Selbstabwertung, Gefuehl eine Last zu sein.",
+      "lexicon": ["worthless", "useless", "failure", "burden", "hate myself", "pathetic", "disgusting", "ashamed", "not good enough", "unlovable", "broken"]
+    },
+    {
+      "type": "absolutism",
+      "label_de": "Absolutistisches Denken",
+      "weight": 2,
+      "color": "#fbc02d",
+      "description": "Schwarz-Weiss-Denken. ACHTUNG: auf diesen Daten nicht gegen Kontrolle validiert.",
+      "lexicon": ["always", "never", "nothing", "everything", "everyone", "nobody", "no one", "completely", "totally", "absolutely", "constantly", "forever", "ever", "every"]
+    },
+    {
+      "type": "social_withdrawal",
+      "label_de": "Sozialer Rueckzug",
+      "weight": 2,
+      "color": "#fdd835",
+      "description": "Isolation, Verlust von Verbindung.",
+      "lexicon": ["alone", "lonely", "nobody cares", "isolated", "no friends", "by myself", "no one understands", "withdraw"]
+    },
+    {
+      "type": "self_focus",
+      "label_de": "Erhoehte Ich-Bezogenheit",
+      "weight": 1,
+      "color": "#fff176",
+      "description": "Hohe Dichte an I/me/my. ALS DICHTE-METRIK behandeln, NICHT jedes Vorkommen markieren. Auf diesen Daten nicht gegen Kontrolle validiert.",
+      "lexicon": ["i", "me", "my", "mine", "myself"],
+      "treat_as_density": true
+    }
+  ]
+}
