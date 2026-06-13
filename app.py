@@ -208,7 +208,16 @@ with left:
         type=["txt", "md", "csv", "json", "log"])
     file_text = None
     if uploaded is not None:
-        file_text = uploaded.read().decode("utf-8", errors="replace")
+        raw = uploaded.read()
+        file_text = None
+        for enc in ("utf-8", "cp1252", "latin-1"):  # WhatsApp/Word-Exporte variieren
+            try:
+                file_text = raw.decode(enc)
+                break
+            except UnicodeDecodeError:
+                continue
+        if file_text is None:
+            file_text = raw.decode("utf-8", errors="replace")
         st.info(f"📄 **{uploaded.name}** — {len(file_text):,} Zeichen, "
                 f"{len(file_text.split()):,} Wörter".replace(",", "."))
     text_input = st.text_area(
