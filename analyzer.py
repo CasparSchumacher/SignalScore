@@ -106,7 +106,7 @@ def _error(msg: str) -> dict:
     }
 
 
-def analyze_text(text: str) -> dict:
+def analyze_text(text: str, max_retries: int = MAX_RETRIES) -> dict:
     if not text or not text.strip():
         return {"score": 0, "risk_level": "low", "summary": "Kein Text zur Analyse.",
                 "highlights": [], "detected_patterns": []}
@@ -117,7 +117,7 @@ def analyze_text(text: str) -> dict:
         return _fallback(text, f"Client-Init fehlgeschlagen ({e})")
 
     last_err = None
-    for attempt in range(MAX_RETRIES):
+    for attempt in range(max_retries):
         try:
             kwargs = dict(
                 model=MODEL,
@@ -144,7 +144,7 @@ def analyze_text(text: str) -> dict:
                 break
             time.sleep(1.5 * (attempt + 1))  # linearer Backoff bei transienten Fehlern
 
-    return _fallback(text, f"LLM nicht erreichbar nach {MAX_RETRIES} Versuchen ({last_err})")
+    return _fallback(text, f"LLM nicht erreichbar nach {max_retries} Versuchen ({last_err})")
 
 
 def _fallback(text: str, reason: str) -> dict:

@@ -51,13 +51,15 @@ def is_large(text: str) -> bool:
     return len(text) > DOC_THRESHOLD_CHARS
 
 
-def analyze_document(text: str, deep_k: int = 2, deep_fn=None) -> dict:
+def analyze_document(text: str, deep_k: int = 1, deep_fn=None) -> dict:
     """
     Analysiert ein grosses Dokument. deep_fn = LLM-Analysefunktion (default: lazy
-    Import von analyzer.analyze_text). deep_k = Anzahl tief analysierter Hotspots.
+    Import von analyzer.analyze_text mit nur 1 Versuch -> begrenzt Latenz bei
+    flakem lokalem Modell). deep_k = Anzahl tief analysierter Hotspots.
     """
     if deep_fn is None:
-        from analyzer import analyze_text as deep_fn  # noqa
+        from analyzer import analyze_text as _at
+        deep_fn = lambda t: _at(t, max_retries=1)  # noqa: E731
 
     words = len(re.findall(r"\S+", text))
     raw_segments = chunk_text(text)
