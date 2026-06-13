@@ -50,11 +50,11 @@ def main():
 
     demos = []
     for i, (txt, s) in enumerate(high, 1):
-        demos.append({"label": f"🔴 Hoch {i}", "text": txt, "expected": s})
+        demos.append({"label": f"Krise {i}", "text": txt, "expected": s})
     for i, (txt, s) in enumerate(moderate, 1):
-        demos.append({"label": f"🟡 Moderat {i}", "text": txt, "expected": s})
+        demos.append({"label": f"Moderat {i}", "text": txt, "expected": s})
     for i, (txt, s) in enumerate(low, 1):
-        demos.append({"label": f"🟢 Kontroll {i}", "text": txt, "expected": s})
+        demos.append({"label": f"Kontrolle {i}", "text": txt, "expected": s})
 
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(demos, f, ensure_ascii=False, indent=2)

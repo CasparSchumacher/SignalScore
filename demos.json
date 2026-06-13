@@ -1,46 +1,46 @@
 [
   {
-    "label": "🔴 Hoch 1",
+    "label": "Krise 1",
     "text": "\" I am alone in my head, thinking about what it would be like , if I was not here. I am alone in my bed, looking for love in a stranger's eyes, cuz I do not want to be here\" This is the chorus to a song I wrote tonight/day.Now I am drunk after 1 year and 9 months soberThere is no way that I can continue, or progress , nothing ever stays good for longI have no oneNo one would even check on me, or know I was goneI cannot do this. I am sorry, I wish I could have been the person my parents wanted me to be , but I fall at every hurdle.So it is time.Thank you for reading Alone",
     "expected": 100
   },
   {
-    "label": "🔴 Hoch 2",
+    "label": "Krise 2",
     "text": "\"I was once a flower. My petals were small and wilted around the edges, for as I was growing I did not receive enough sunlight. That did not matter to you. You were a caterpillar. A hungry caterpillar. You ate my petals. You savored their flavor. Day after day you would take the tiniest nibble from me. It took years before you had eaten me away until I was nothing. By then, everyone had forgotten I was once a flower. I remember.\"How do you interpret this? How do you interpret this?",
     "expected": 68
   },
   {
-    "label": "🔴 Hoch 3",
+    "label": "Krise 3",
     "text": "\"It can get better\" and then \"nothing has purpose, we live horrible lives\". I hate it, i want it all to end. So tired of teetering just on the edge",
     "expected": 93
   },
   {
-    "label": "🟡 Moderat 1",
+    "label": "Moderat 1",
     "text": "\"As a product of modern dystopian society I have become extremely socially awkward and unable to communicate with other human beings which has let me to fall into alchoholism and further financial unstability and depression and made me wonder about the meaning of my existence. So no, mom. I did not get a girlfriend, and quite honestly, I am doubting I ever will \" My mom asked me if i have a girlfriend",
     "expected": 48
   },
   {
-    "label": "🟡 Moderat 2",
+    "label": "Moderat 2",
     "text": "\"I am happy...\" \"So happy to...\" \"Wow, sth is so exciting/I am so excited...\" I cannot keep hearing/reading these phrases without sensing a sort of rejection from within. It feels like I have not felt it since so long ago that it is become a completely alien feeling to me. Is it the world that is trying to put up a \"happy\" facade and make every basic thing \"exciting\" or is it just me who is becoming so alienated I can hardly feel like a human anymore? The concept of happiness is starting to feel nauseating.",
     "expected": 57
   },
   {
-    "label": "🟡 Moderat 3",
+    "label": "Moderat 3",
     "text": "&amp;#x200B;my parents are no longer the infallible role models I thought, but deeply flawed apes who do not know anything like the rest of us. In fact I have no role models anymorehuman relationships are not mysterious and wonderful and fateful, but predictable chemical reactions that can be broken down to a science life is not exciting and wonderful, but boring and predictable and horrendous I am so disillusioned with life",
     "expected": 37
   },
   {
-    "label": "🟢 Kontroll 1",
+    "label": "Kontrolle 1",
     "text": "\"Beware that, when fighting monsters, you yourself do not become a monster... for when you gaze long into the abyss. The abyss gazes also into you.\" What if the abyss wants to do more than gaze",
     "expected": 0
   },
   {
-    "label": "🟢 Kontroll 2",
+    "label": "Kontrolle 2",
     "text": "\"Bill, I believe this is killing me \\*As the smile ran away from his face\\* but I am sure that I could be a movie star, If I could get out from this place.\" I hate my job. I feel how it is taking happines from me. Like John in \"Piano man\"",
     "expected": 12
   },
   {
-    "label": "🟢 Kontroll 3",
+    "label": "Kontrolle 3",
     "text": "\"Depressed people do not want to be happy, they want to be unhappy to confirm their depression. If they are happy they are not depressed and they have to go out into the world to live, which can be depressing.\" \\- From the movie Closer Depressed ppl",
     "expected": 0
   }
