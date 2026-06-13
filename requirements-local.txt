@@ -1,0 +1,4 @@
+# Zusatz fuer lokales LLM-Hosting auf Apple Silicon (M-Serie).
+# Nur noetig, wenn ihr das Modell lokal statt ueber einen Cloud-Endpoint fahren wollt.
+#   pip install -r requirements.txt -r requirements-local.txt
+mlx-lm>=0.20

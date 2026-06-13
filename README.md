@@ -56,9 +56,22 @@ Wichtigste Befunde der Datenanalyse:
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env        # einen API-Key eintragen
+cp .env.example .env        # Defaults zeigen auf lokales MLX
 streamlit run app.py
 ```
+
+Die App läuft **sofort** auch ohne LLM: `analyzer.py` fällt bei nicht erreichbarem
+Endpoint automatisch auf den regelbasierten Keyword-Baseline (`mock_analyzer.py`) zurück.
+
+### Echtes lokales LLM (Apple Silicon, kein API-Key, DSGVO-freundlich)
+
+```bash
+pip install -r requirements-local.txt
+# OpenAI-kompatiblen Server starten (lädt das Modell beim ersten Start, ~4,3 GB):
+python -m mlx_lm server --model mlx-community/Qwen2.5-7B-Instruct-4bit --port 8080
+```
+`.env` zeigt per Default schon auf `http://localhost:8080/v1`. Patiententexte
+verlassen so nie den Rechner.
 
 ## Dateien
 
